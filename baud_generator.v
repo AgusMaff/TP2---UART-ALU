@@ -2,8 +2,8 @@
 
 module baud_generator
     #(
-        parameter N = 4,  //bit necesarios para la cuenta
-                  M = 10 //valoe maximo hasta el cual voy a contar
+        parameter N = 9,  //bit necesarios para la cuenta
+                  M = 163 //valoe maximo hasta el cual voy a contar
     )
     (
         input clk, reset,
