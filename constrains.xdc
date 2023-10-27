@@ -4,10 +4,10 @@ set_property PACKAGE_PIN W5 [get_ports i_clk]
 	#create_clock -add -name sys_clk_pin -period 10.00 -waveform {0 5} [get_ports CLK100MHZ]
  
  ##USB-RS232 Interface
-set_property PACKAGE_PIN B18 [get_ports rx]						
-	set_property IOSTANDARD LVCMOS33 [get_ports rx]
-set_property PACKAGE_PIN A18 [get_ports tx]						
-	set_property IOSTANDARD LVCMOS33 [get_ports tx]
+set_property PACKAGE_PIN B18 [get_ports RsRx]						
+	set_property IOSTANDARD LVCMOS33 [get_ports RsRx]
+set_property PACKAGE_PIN A18 [get_ports RsTx]						
+	set_property IOSTANDARD LVCMOS33 [get_ports RsTx]
 	
 ##Buttons
 set_property PACKAGE_PIN U18 [get_ports i_reset]						
