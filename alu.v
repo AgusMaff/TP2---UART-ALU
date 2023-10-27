@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+
 module alu_logic#(
     parameter OP_CODE_SIZE = 6,
     parameter OPERAND_SIZE = 8
@@ -7,7 +8,7 @@ module alu_logic#(
     input [OPERAND_SIZE-1:0]dato_a,
     input [OPERAND_SIZE-1:0]dato_b,
     input [OP_CODE_SIZE-1:0]op_code,
-    output reg [OPERAND_SIZE-1:0]o_resultado
+    output [OPERAND_SIZE-1:0]o_resultado
 );
     localparam OP_ADD = 6'b100000;
     localparam OP_SUB = 6'b100010;
