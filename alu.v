@@ -6,7 +6,7 @@ module alu_logic#(
 (
     input [OPERAND_SIZE-1:0]dato_a,
     input [OPERAND_SIZE-1:0]dato_b,
-    input [OP_CODE_SIZE-1:0]op_code,
+    input [OPERAND_SIZE-1:0]op_code,
     output [OPERAND_SIZE-1:0]o_resultado
 );
     localparam OP_ADD = 8'b00100000;
