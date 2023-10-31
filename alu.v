@@ -1,7 +1,6 @@
 `timescale 1ns / 1ps
 
 module alu_logic#(
-    parameter OP_CODE_SIZE = 6,
     parameter OPERAND_SIZE = 8
 )
 (
@@ -10,15 +9,15 @@ module alu_logic#(
     input [OP_CODE_SIZE-1:0]op_code,
     output [OPERAND_SIZE-1:0]o_resultado
 );
-    localparam OP_ADD = 6'b100000;
-    localparam OP_SUB = 6'b100010;
-    localparam OP_AND = 6'b100100;
-    localparam OP_OR = 6'b100101;
-    localparam OP_XOR = 6'b100110;
-    localparam OP_SRA = 6'b000011;
-    localparam OP_SRL = 6'b000010;
-    localparam OP_NOR = 6'b100111;
-    localparam OP_RESET = 6'b000000;
+    localparam OP_ADD = 8'b00100000;
+    localparam OP_SUB = 8'b00100010;
+    localparam OP_AND = 8'b00100100;
+    localparam OP_OR = 8'b00100101;
+    localparam OP_XOR = 8'b00100110;
+    localparam OP_SRA = 8'b00000011;
+    localparam OP_SRL = 8'b00000010;
+    localparam OP_NOR = 8'b00100111;
+    localparam OP_RESET = 8'b00000000;
 
     reg [OPERAND_SIZE-1:0] resultado = 8'b00000000;
     assign o_resultado=resultado; 
