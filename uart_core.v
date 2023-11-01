@@ -15,17 +15,17 @@ module uart_core
         input rd_uart, wr_uart, rx,
         input [DBIT-1:0] w_data,
         output [DBIT-1:0] r_data,
-        output tx_full, rx_empty, tx
+        output tx_full, rx_empty, tx, tx_done_tick
     );
 
     //signal declaration
-    wire tick, rx_done_tick, tx_done_tick;
+    wire tick, rx_done_tick;
     wire tx_empty, tx_fifo_not_empty;
     wire [DBIT-1:0] tx_fifo_out, rx_data_out;
 
     //body
     //baud rate generator
-    baud_generator #(.NB(DVSR_BITS), .M(DVSR)) baud_generator
+    baud_generator #(.N(DVSR_BITS), .M(DVSR)) baud_generator
     (
         .clk(clk), .reset(reset),
         .max_tick(tick), .q()
