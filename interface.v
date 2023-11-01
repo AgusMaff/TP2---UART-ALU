@@ -11,6 +11,7 @@ module interface
     input [BUS_SIZE-1:0] i_resul,
     input tx_full_signal,
     input rx_empty_signal,
+    input tx_done_tick,
     output [BUS_SIZE-1:0] opA,
     output [BUS_SIZE-1:0] opB,
     output [BUS_SIZE-3:0] opCode,
@@ -18,18 +19,20 @@ module interface
     output rd_signal,
     output wr_signal
 );
-    localparam [1:0]
-        WAITING = 2'b00,
-        OP_A = 2'b01,
-        OP_B = 2'b10,
-        OP_CODE = 2'b11;
+
+    localparam [2:0]
+        WAITING = 3'b000,
+        A = 3'b001,
+        B = 3'b010,
+        OP = 3'b011,
+        SENDING = 3'b100;
     
     reg rd;
     reg wr;    
     reg [BUS_SIZE-1:0] alu_result;
-    reg [BUS_SIZE-1:0] a;
-    reg [BUS_SIZE-1:0] b;
-    reg [BUS_SIZE-3:0] op;
+    reg [BUS_SIZE-1:0] a_reg;
+    reg [BUS_SIZE-1:0] b_reg;
+    reg [BUS_SIZE-3:0] op_reg;
     
     reg [1:0]state_next;
     reg [1:0]state_inter;
@@ -37,9 +40,13 @@ module interface
     assign o_result = i_resul;
     assign rd_signal = rd;
     assign wr_signal = wr;
-    assign opA = a;
-    assign opB = b;
-    assign opCode = op;
+    assign opA = a_reg;
+    assign opB = b_reg;
+    assign opCode = op_reg;
+    
+    initial begin
+        state_next = WAITING;
+    end
     
     always @(posedge clk, posedge reset)
         if(reset)
@@ -47,9 +54,9 @@ module interface
                 state_inter = WAITING;
                 rd <= 1'b0;
                 wr <= 1'b0;
-                a <= 8'b00000000;
-                b <= 8'b00000000;
-                op <= 6'b000000;
+                a_reg <= 8'b00000000;
+                b_reg <= 8'b00000000;
+                op_reg <= 6'b000000;
                 
             end
         else
@@ -59,39 +66,56 @@ module interface
             
     always @(*)    
         begin
-        wr = 1'b0;
+        state_next = state_inter;
             case(state_inter)
                 WAITING:
                     begin
                         if(~rx_empty_signal)
                             begin
-                                state_next = OP_A;
+                                state_next = A;
                                 rd = 1'b1;
                             end
                         else
                              rd = 1'b0;
  
                     end
-                OP_A:
+                A:
+                    if(~rx_empty_signal)
+                        begin
+                            rd = 1'b1;
+                            a_reg = i_data;
+                            state_next = B;
+                        end
+                B:
+                    if(~rx_empty_signal)
+                        begin
+                            rd = 1'b1;
+                            b_reg = i_data;
+                            state_next = OP;
+                        end
+                OP:
                     begin
-                        a = i_data;
-                        state_next = OP_B;
+                        if(~rx_empty_signal)
+                            begin
+                                rd = 1'b1;
+                                op_reg = i_data;
+                                state_next = SENDING;                       
+                            end               
                     end
-                OP_B:
-                    begin
-                        b = i_data;
-                        state_next = OP_CODE;
-                    end
-                OP_CODE:
+                SENDING:
                     begin
                         if(~tx_full_signal)
                             begin
                                 rd = 1'b0;                           
                                 wr = 1'b1;
-                                op = i_data;
-                            end                   
-                        state_next = WAITING;                                                                   
-                    end
+                            end
+                    
+                        if(tx_done_tick)
+                            begin
+                                state_next = WAITING;
+                                wr = 1'b0;
+                            end 
+                    end                                                                                                                                                    
             endcase
         end
 endmodule
