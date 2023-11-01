@@ -1,14 +1,28 @@
 import tkinter as tk
-import serial 
+import serial as ser
 
+# Configurar la conexión serial
+puerto_serial = ser.Serial(
+                                port="/dev/ttyUSB1",
+                                baudrate=19200,
+                                bytesize=8,
+                                parity='N',
+                                stopbits=1)  # Reemplazar '/dev/ttyUSB0' con el puerto serial apropiado
+
+i=0
 def enviar_valor(entrada):
     try:
         valor = format(int(entrada.get()),"08b")
     except ValueError:
         valor = codigosOperacion.get(entrada.get(),"00000000")
         
-    
     print(f"Valor: {valor}")
+     # Enviar datos por el puerto serial
+    puerto_serial.write(valor.encode())
+    # Cerrar la conexión serial
+    #puerto_serial.close()
+    
+    
 
 codigosOperacion = {
     "+" : "100000",

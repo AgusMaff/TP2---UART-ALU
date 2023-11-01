@@ -25,7 +25,7 @@ module uart_core
 
     //body
     //baud rate generator
-    baud_generator #(.NB(DVSR_BITS), .M(DVSR)) baud_generator
+    baud_generator #(.N(DVSR_BITS), .M(DVSR)) baud_generator
     (
         .clk(clk), .reset(reset),
         .max_tick(tick), .q()

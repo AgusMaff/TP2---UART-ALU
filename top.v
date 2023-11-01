@@ -51,7 +51,7 @@ module top
     interface(
         .clk(i_clk), .reset(i_reset),
         .i_data(rx_data), .i_resul(i_alu_result), .tx_full_signal(tx_full_signal),.rx_empty_signal(rx_empty_signal),
-        .op_a(op_a), .op_b(op_b), .op_code(op_code),
+        .opA(op_a), .opB(op_b), .opCode(op_code),
         .o_result(tx_data), .rd_signal(rd_signal), .wr_signal(wr_signal)
     );
     

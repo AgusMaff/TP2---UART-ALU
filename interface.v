@@ -11,9 +11,9 @@ module interface
     input [BUS_SIZE-1:0] i_resul,
     input tx_full_signal,
     input rx_empty_signal,
-    output [BUS_SIZE-1:0] op_a,
-    output [BUS_SIZE-1:0] op_b,
-    output [BUS_SIZE-3:0] op_code,
+    output [BUS_SIZE-1:0] opA,
+    output [BUS_SIZE-1:0] opB,
+    output [BUS_SIZE-3:0] opCode,
     output [BUS_SIZE-1:0] o_result,
     output rd_signal,
     output wr_signal
@@ -22,7 +22,7 @@ module interface
         WAITING = 2'b00,
         OP_A = 2'b01,
         OP_B = 2'b10,
-        OP_CODE = 2'b10;
+        OP_CODE = 2'b11;
     
     reg rd;
     reg wr;    
@@ -37,9 +37,9 @@ module interface
     assign o_result = i_resul;
     assign rd_signal = rd;
     assign wr_signal = wr;
-    assign op_a = a;
-    assign op_b = b;
-    assign op_code = op;
+    assign opA = a;
+    assign opB = b;
+    assign opCode = op;
     
     always @(posedge clk, posedge reset)
         if(reset)
