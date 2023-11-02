@@ -3,36 +3,38 @@ import serial as ser
 
 # Configurar la conexión serial
 puerto_serial = ser.Serial(
-                                port="/dev/ttyUSB1",
-                                baudrate=19200,
-                                bytesize=8,
-                                parity='N',
-                                stopbits=1)  # Reemplazar '/dev/ttyUSB0' con el puerto serial apropiado
+    port='/dev/ttyUSB1',
+    baudrate=19200,
+    bytesize=ser.EIGHTBITS,
+    parity=ser.PARITY_NONE,
+    stopbits=ser.STOPBITS_ONE,
+    timeout=0
+)
 
-i=0
 def enviar_valor(entrada):
-    try:
-        valor = format(int(entrada.get()),"08b")
-    except ValueError:
-        valor = codigosOperacion.get(entrada.get(),"00000000")
-        
-    print(f"Valor: {valor}")
-     # Enviar datos por el puerto serial
-    puerto_serial.write(valor.encode())
+    #dato = int(entrada.get()).to_bytes(1,"big")
+    #print(f"Valor: {dato}")
+    #print(f"Valor: {int(entrada.get())}")
+    if int(entrada.get()) > 0:
+    # Enviar datos por el puerto serial
+    	valor = 2
+    	dato = int(valor).to_bytes(1,"big")
+    	puerto_serial.write(dato)
+    	print(f"se envio {dato}")
     # Cerrar la conexión serial
     #puerto_serial.close()
     
     
 
 codigosOperacion = {
-    "+" : "100000",
-    "-" : "100010",
-    "&" : "100100",
-    "|" : "100101",
-    "^" : "100110",
-    ">>" : "000011",
-    ">>>" : "000010",
-    "!|" : "100111"
+    "+" : 32,
+    "-" : 34,
+    "&" : 36,
+    "|" : 37,
+    "^" : 38,
+    ">>" : 3,
+    ">>>" : 2,
+    "!|" : 39
 }
 
 # Crear una instancia de la ventana
