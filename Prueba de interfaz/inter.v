@@ -16,7 +16,7 @@ module interface
     //output [BUS_SIZE-1:0] opB,
     //output [BUS_SIZE-3:0] opCode,
     //output [BUS_SIZE-1:0] o_result,
-    output [4:0] flags,
+    output reg [4:0] flags,
     output rd_signal,
     output wr_signal
 );
@@ -40,7 +40,7 @@ module interface
     //assign o_result = i_resul;
     assign rd_signal = rd;
     assign wr_signal = wr;
-    assign flags = f;
+    //assign flags = f;
    
     initial begin
         state_next = WAITING;
@@ -52,19 +52,18 @@ module interface
                 state_inter = WAITING;
                 rd <= 1'b0;
                 wr <= 1'b0;
-                f <= 5'b00000;
+                flags <= 5'b00000;
                 
             end
         else
             begin
                 state_inter <= state_next;
-                f <= f_next;
+                flags <= f_next;
             end
             
-    always @(*)    
+    always @(posedge clk)    
         begin
         state_next = state_inter;
-        f = f_next;
             case(state_inter)
                 WAITING:
                     begin
