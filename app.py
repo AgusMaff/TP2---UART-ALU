@@ -1,40 +1,56 @@
 import tkinter as tk
 import serial as ser
+import serial.tools.list_ports
+
+# Obtener una lista de todos los puertos seriales disponibles
+ports = list(serial.tools.list_ports.comports())
+port = ports[0].device
 
 # Configurar la conexión serial
 puerto_serial = ser.Serial(
-    port='/dev/ttyUSB1',
+    port=port,
     baudrate=19200,
     bytesize=ser.EIGHTBITS,
     parity=ser.PARITY_NONE,
     stopbits=ser.STOPBITS_ONE,
     timeout=0
 )
+   
 
-def enviar_valor(entrada):
-    #dato = int(entrada.get()).to_bytes(1,"big")
-    #print(f"Valor: {dato}")
-    #print(f"Valor: {int(entrada.get())}")
-    if int(entrada.get()) > 0:
-    # Enviar datos por el puerto serial
-    	valor = 2
-    	dato = int(valor).to_bytes(1,"big")
-    	puerto_serial.write(dato)
-    	print(f"se envio {dato}")
-    # Cerrar la conexión serial
-    #puerto_serial.close()
-    
-    
+def enviar_operando_A():
+    resultado.delete(0,len(resultado.get()))
+    data = int(entradaA.get())
+    if -128 <= data <= 127:
+        puerto_serial.write(data.to_bytes(1, 'big',signed=True))
+    else:
+        resultado.insert(0, "No se ingreso un operando valido")
 
+def enviar_operando_B():
+    resultado.delete(0,len(resultado.get()))
+    data = int(entradaA.get())
+    if -128 <= data <= 127:
+        puerto_serial.write(data.to_bytes(1, 'big',signed=True))
+    else:
+        resultado.insert(0, "No se ingreso un operando valido")
+
+def enviar_codigo_operacion():
+    resultado.delete(0,len(resultado.get()))
+    data = str(entradaOP.get())
+    if data in codigosOperacion:
+        puerto_serial.write(int(codigosOperacion[data]).to_bytes(1, 'big',signed=True))
+    else:
+        resultado.insert(0, "No se ingreso un codigo de operacion valido")
+    
 codigosOperacion = {
-    "+" : 32,
-    "-" : 34,
-    "&" : 36,
-    "|" : 37,
-    "^" : 38,
-    ">>" : 3,
-    ">>>" : 2,
-    "!|" : 39
+    "+" : 0b100000,
+    "-" : 0b100010,
+    "&" : 0b100100,
+    "|" : 0b100101,
+    "^" : 0b100110,
+    ">>" : 0b000011,
+    ">>>" : 0b000010,
+    "!|" : 0b100111,
+    "R" : 0b000000
 }
 
 # Crear una instancia de la ventana
@@ -60,13 +76,17 @@ entradaB = tk.Entry(ventana, bg="white", fg="black")
 entradaB.place(x=20,y=60)
 entradaOP = tk.Entry(ventana, bg="white", fg="black")
 entradaOP.place(x=20,y=100)
+resultado = tk.Entry(ventana, bg="white", fg="black",width=50)
+resultado.place(x=20,y=140)
 
 # Agregar botones para cargas las entradas del usuario
-botonA = tk.Button(ventana, text="Ingresar", bg="grey", command=lambda: enviar_valor(entradaA))
+botonA = tk.Button(ventana, text="Ingresar", bg="grey", command=lambda: enviar_operando_A())
 botonA.place(x=250,y=20)
-botonB = tk.Button(ventana, text="Ingresar", bg="grey", command=lambda: enviar_valor(entradaB))
+botonB = tk.Button(ventana, text="Ingresar", bg="grey", command=lambda: enviar_operando_B())
 botonB.place(x=250,y=60)
-botonOP = tk.Button(ventana, text="Ingresar", bg="grey", command=lambda: enviar_valor(entradaOP))
+botonOP = tk.Button(ventana, text="Ingresar", bg="grey", command=lambda: enviar_codigo_operacion())
 botonOP.place(x=250,y=100)
+
+
 
 ventana.mainloop()
