@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 
-module alu_logic#(
+module alu#(
     parameter OPERAND_SIZE = 8,
     parameter OP_CODE_SIZE = 6
 )
 (
-    input [OPERAND_SIZE-1:0]dato_a,
-    input [OPERAND_SIZE-1:0]dato_b,
+    input signed [OPERAND_SIZE-1:0]dato_a,
+    input signed [OPERAND_SIZE-1:0]dato_b,
     input [OP_CODE_SIZE-1:0]op_code,
     output [OPERAND_SIZE-1:0]o_resultado
 );
@@ -37,9 +37,9 @@ module alu_logic#(
                 OP_XOR:
                     resultado = dato_a ^ dato_b;
                 OP_SRA:
-                    resultado = dato_a >> 1;
-                OP_SRL:
                     resultado = dato_a >>> 1;
+                OP_SRL:
+                    resultado = dato_a >> 1;
                 OP_NOR:
                     resultado = ~(dato_a | dato_b);
                 OP_RESET:
