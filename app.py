@@ -30,7 +30,7 @@ def enviar_operando_A():
 def enviar_operando_B():
     resultado.delete(0,len(resultado.get()))
     if data is None:
-        data = int(entradaA.get())
+        data = int(entradaB.get())
         if -128 <= data <= 127:
             puerto_serial.write(data.to_bytes(1, 'big',signed=True))
             data = None
