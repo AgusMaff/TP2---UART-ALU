@@ -6,7 +6,7 @@ module top
               DBIT        = 8,    // data bits
               SB_TICK     = 16,   // ticks for stop bits
                                     // 16/24/32 for 1/1.5/2 stop bits
-              DVSR        = 326,  // baud rate divisor
+              DVSR        = 163,  // baud rate divisor
                                     // DVSR = 50M/(16* baud rate)
               DVSR_BITS   = 9,    // number of bits in divisor
               FIFO_W      = 2    // FIFO width
@@ -15,11 +15,8 @@ module top
 (
     input CLK100MHz, Reset,
     input RsRx,
-    output RsTx,
-    output [BUS_SIZE-1:0] LED
+    output RsTx
     );
-    
-    reg aux;
     
     wire rd_signal;
     wire wr_signal;
@@ -33,13 +30,6 @@ module top
     wire [BUS_SIZE-1:0] opB;
     wire [BUS_SIZE-3:0] opCode;
     wire [BUS_SIZE-1:0] i_alu_result;
-    
-    //assign LED = i_alu_result;
-    assign LED = aux;
-    initial begin
-        if(opA > 0)
-            aux = 1;
-    end
     
     uart_core#(
         .DBIT(DBIT),
@@ -58,8 +48,8 @@ module top
     
     interface(
         .clk(CLK100MHz), .reset(Reset),
-        .i_data(rx_data), .i_resul(i_alu_result), .tx_full_signal(tx_full_signal),.rx_empty_signal(rx_empty_signal), .tx_done_tick(tx_done_tick),
-        .opA(opA), .opB(opB), .opCode(opCode),
+        .i_data(rx_data), .i_result(i_alu_result), .tx_full_signal(tx_full_signal),.rx_empty_signal(rx_empty_signal), .tx_done_tick(tx_done_tick),
+        .op_a(opA), .op_b(opB), .op_code(opCode),
         .o_result(tx_data), .rd_signal(rd_signal), .wr_signal(wr_signal)
     );
     
