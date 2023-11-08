@@ -19,28 +19,34 @@ puerto_serial = ser.Serial(
 
 def enviar_operando_A():
     resultado.delete(0,len(resultado.get()))
-    data = int(entradaA.get())
-    if -128 <= data <= 127:
-        puerto_serial.write(data.to_bytes(1, 'big',signed=True))
-    else:
-        resultado.insert(0, "No se ingreso un operando valido")
+    if data is None:
+        data = int(entradaA.get())
+        if -128 <= data <= 127:
+            puerto_serial.write(data.to_bytes(1, 'big',signed=True))
+            data = None
+        else:
+            resultado.insert(0, "No se ingreso un operando valido")
 
 def enviar_operando_B():
     resultado.delete(0,len(resultado.get()))
-    data = int(entradaA.get())
-    if -128 <= data <= 127:
-        puerto_serial.write(data.to_bytes(1, 'big',signed=True))
-    else:
-        resultado.insert(0, "No se ingreso un operando valido")
-
+    if data is None:
+        data = int(entradaA.get())
+        if -128 <= data <= 127:
+            puerto_serial.write(data.to_bytes(1, 'big',signed=True))
+            data = None
+        else:
+            resultado.insert(0, "No se ingreso un operando valido")
+    
 def enviar_codigo_operacion():
     resultado.delete(0,len(resultado.get()))
-    data = str(entradaOP.get())
-    if data in codigosOperacion:
-        puerto_serial.write(int(codigosOperacion[data]).to_bytes(1, 'big',signed=True))
-    else:
-        resultado.insert(0, "No se ingreso un codigo de operacion valido")
-    
+    if data is None:
+        data = str(entradaOP.get())
+        if data in codigosOperacion:
+            puerto_serial.write(int(codigosOperacion[data]).to_bytes(1, 'big',signed=True))
+            data = None
+        else:
+            resultado.insert(0, "No se ingreso un codigo de operacion valido")
+            
 codigosOperacion = {
     "+" : 0b100000,
     "-" : 0b100010,
