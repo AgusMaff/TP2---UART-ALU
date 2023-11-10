@@ -1,5 +1,5 @@
 import tkinter as tk
-import time
+#import time
 import serial as ser
 import serial.tools.list_ports
 
@@ -23,7 +23,7 @@ def enviar_operando_A():
     data = int(entradaA.get())
     if -128 <= data <= 127:
         puerto_serial.write(data.to_bytes(1, 'big',signed=True))
-        time.sleep(0.05)
+        #time.sleep(0.05)
         #data = None
     else:
         resultado.insert(0, "No se ingreso un operando valido")
@@ -34,7 +34,7 @@ def enviar_operando_B():
     data = int(entradaB.get())
     if -128 <= data <= 127:
         puerto_serial.write(data.to_bytes(1, 'big',signed=True))
-        time.sleep(0.05)
+        #time.sleep(0.05)
         #data = None
     else:
         resultado.insert(0, "No se ingreso un operando valido")
@@ -45,9 +45,9 @@ def enviar_codigo_operacion():
     data = str(entradaOP.get())
     if data in codigosOperacion:
         puerto_serial.write(int(codigosOperacion[data]).to_bytes(1, 'big',signed=True))
-        time.sleep(0.05)
+        #time.sleep(0.05)
         #data = None 
-        resultado.insert(0, int.from_bytes(puerto_serial.read(), byteorder='big'))	  
+        resultado.insert(0, int(from_bytes(puerto_serial.read()), byteorder='big'))	  
     else:
         resultado.insert(0, "No se ingreso un codigo de operacion valido")
             
