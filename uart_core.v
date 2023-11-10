@@ -19,7 +19,7 @@ module uart_core
     );
 
     //signal declaration
-    wire tick, rx_done_tick;
+    wire tick, rx_done_tick, tx_done_tick;
     wire tx_empty, tx_fifo_not_empty;
     wire [DBIT-1:0] tx_fifo_out, rx_data_out;
 
