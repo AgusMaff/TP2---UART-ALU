@@ -19,13 +19,13 @@ module top
     output[BUS_SIZE-1:0] LED
     );
     
-    wire rd_signal;
-    wire wr_signal;
+    wire rd;
+    wire wr;
     wire [BUS_SIZE-1:0] tx_data;
     wire [BUS_SIZE-1:0] rx_data;
-    wire tx_full_signal;
-    wire rx_empty_signal;
-    wire tx_done_tick;
+    wire full_signal;
+    wire empty_signal;
+    wire done_tick;
     
     wire [BUS_SIZE-1:0] opA;
     wire [BUS_SIZE-1:0] opB;
@@ -43,17 +43,17 @@ module top
     )
     (
         .clk(CLK100MHz), .reset(Reset),
-        .rd_uart(rd_signal), .wr_uart(wr_signal), .rx(RsRx),
+        .rd_uart(rd), .wr_uart(wr), .rx(RsRx),
         .w_data(tx_data),
         .r_data(rx_data),
-        .tx_full(tx_full_signal), .rx_empty(rx_empty_signal), .tx(RsTx), .tx_done_tick(tx_done_tick)
+        .tx_full(full_signal), .rx_empty(empty_signal), .tx(RsTx), .tx_done_tick(done_tick)
     );
     
     interface(
         .clk(CLK100MHz), .reset(Reset),
-        .i_data(rx_data), .i_result(i_alu_result), .tx_full_signal(tx_full_signal),.rx_empty_signal(rx_empty_signal), .tx_done_tick(tx_done_tick),
+        .i_data(rx_data), .i_result(i_alu_result), .tx_full_signal(full_signal),.rx_empty_signal(empty_signal), .tx_done_tick(done_tick),
         .op_a(opA), .op_b(opB), .op_code(opCode),
-        .o_result(tx_data), .rd_signal(rd_signal), .wr_signal(wr_signal)
+        .o_result(tx_data), .rd_signal(rd), .wr_signal(wr)
     );
     
     alu(
