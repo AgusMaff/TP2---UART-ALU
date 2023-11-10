@@ -15,37 +15,37 @@ puerto_serial = ser.Serial(
     stopbits=ser.STOPBITS_ONE,
     timeout=0
 )
-   
 
 def enviar_operando_A():
     resultado.delete(0,len(resultado.get()))
-    if data is None:
-        data = int(entradaA.get())
-        if -128 <= data <= 127:
-            puerto_serial.write(data.to_bytes(1, 'big',signed=True))
-            data = None
-        else:
-            resultado.insert(0, "No se ingreso un operando valido")
+    #if data is None:
+    data = int(entradaA.get())
+    if -128 <= data <= 127:
+        puerto_serial.write(data.to_bytes(1, 'big',signed=True))
+        #data = None
+    else:
+        resultado.insert(0, "No se ingreso un operando valido")
 
 def enviar_operando_B():
     resultado.delete(0,len(resultado.get()))
-    if data is None:
-        data = int(entradaB.get())
-        if -128 <= data <= 127:
-            puerto_serial.write(data.to_bytes(1, 'big',signed=True))
-            data = None
-        else:
-            resultado.insert(0, "No se ingreso un operando valido")
+    #if data is None:
+    data = int(entradaB.get())
+    if -128 <= data <= 127:
+        puerto_serial.write(data.to_bytes(1, 'big',signed=True))
+        #data = None
+    else:
+        resultado.insert(0, "No se ingreso un operando valido")
     
 def enviar_codigo_operacion():
     resultado.delete(0,len(resultado.get()))
-    if data is None:
-        data = str(entradaOP.get())
-        if data in codigosOperacion:
-            puerto_serial.write(int(codigosOperacion[data]).to_bytes(1, 'big',signed=True))
-            data = None
-        else:
-            resultado.insert(0, "No se ingreso un codigo de operacion valido")
+    #if data is None:
+    data = str(entradaOP.get())
+    if data in codigosOperacion:
+        puerto_serial.write(int(codigosOperacion[data]).to_bytes(1, 'big',signed=True))
+        #data = None 
+        resultado.insert(0, int.from_bytes(puerto_serial.read(), byteorder='big'))	  
+    else:
+        resultado.insert(0, "No se ingreso un codigo de operacion valido")
             
 codigosOperacion = {
     "+" : 0b100000,

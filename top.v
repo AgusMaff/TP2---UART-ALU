@@ -15,7 +15,8 @@ module top
 (
     input CLK100MHz, Reset,
     input RsRx,
-    output RsTx
+    output RsTx,
+    output[BUS_SIZE-1:0] LED
     );
     
     wire rd_signal;
@@ -30,6 +31,8 @@ module top
     wire [BUS_SIZE-1:0] opB;
     wire [BUS_SIZE-3:0] opCode;
     wire [BUS_SIZE-1:0] i_alu_result;
+    
+    assign LED = i_alu_result;
     
     uart_core#(
         .DBIT(DBIT),
@@ -53,7 +56,7 @@ module top
         .o_result(tx_data), .rd_signal(rd_signal), .wr_signal(wr_signal)
     );
     
-    alu_logic(
+    alu(
         .dato_a(opA),
         .dato_b(opB),
         .op_code(opCode),

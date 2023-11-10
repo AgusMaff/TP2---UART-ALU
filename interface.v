@@ -17,7 +17,9 @@ module interface
     output [BUS_SIZE-3:0] op_code,
     output [BUS_SIZE-1:0] o_result,
     output rd_signal,
-    output wr_signal
+    output wr_signal,
+    output flags,
+    output aux_led
 );
     localparam [2:0]
         WAITING = 3'b000,
@@ -36,12 +38,18 @@ module interface
     reg [1:0]state_next;
     reg [1:0]state_inter;
     
+    reg [2:0] flags_reg;
+    
+    reg aux;
+    
     assign o_result = alu_result;
     assign rd_signal = rd;
     assign wr_signal = wr;
     assign op_a = a_reg;
     assign op_b = b_reg;
     assign op_code = op_reg;
+    assign flags = flags_reg;
+    assign aux_led = aux;
     
     
     initial begin
@@ -57,42 +65,47 @@ module interface
                 a_reg <= 8'b00000000;
                 b_reg <= 8'b00000000;
                 op_reg <= 6'b000000;
-                
             end
         else
             begin
+                aux <= rx_empty_signal;
+                flags_reg <= state_inter;
                 state_inter <= state_next;
             end
             
     always @(*)    
         begin
         state_next = state_inter;
-            case(state_inter)
+           case(state_inter)
                 WAITING:
                     begin
                         if(~rx_empty_signal)
                             begin
                                 state_next = A;
-                                rd = 1'b1;
                             end
                         else
-                             rd = 1'b0;
- 
+                            begin
+                                rd = 1'b0;
+                            end
                     end
                 A:
-                    if(~rx_empty_signal)
-                        begin
-                            rd = 1'b1;
-                            a_reg = i_data;
-                            state_next = B;
-                        end
+                    begin
+                        if(~rx_empty_signal)
+                            begin
+                                rd = 1'b1;
+                                a_reg = i_data;
+                                state_next = B;
+                            end
+                    end
                 B:
-                    if(~rx_empty_signal)
-                        begin
-                            rd = 1'b1;
-                            b_reg = i_data;
-                            state_next = OP;
-                        end
+                    begin
+                        if(~rx_empty_signal)
+                            begin
+                                rd = 1'b1;
+                                b_reg = i_data;
+                                state_next = OP;
+                            end
+                    end
                 OP:
                     begin
                         if(~rx_empty_signal)
@@ -104,9 +117,9 @@ module interface
                     end
                 SENDING:
                     begin
-                        if(~tx_full_signal)
-                            begin
-                                rd = 1'b0;                           
+                        rd = 1'b0; 
+                        if(~tx_full_signal && ~tx_done_tick)
+                            begin                          
                                 wr = 1'b1;
                                 alu_result = i_result;
                             end
